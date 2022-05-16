@@ -1,0 +1,21 @@
+{% extends 'paginas/modelo.html' %} {% load static %} {% block pagetitle %}
+<h1>Cadastros</h1>
+
+{% endblock %} {% block breadcrumb %}
+<nav>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="">Home</a></li>
+        <li class="breadcrumb-item active">Cadastros</li>
+    </ol>
+</nav>
+{% endblock %} {% block main %}
+<form method="post">
+    {% csrf_token %} {{ form.as_p }}
+
+    <button type="submit" class="btn btn-primary">
+		Salvar
+	</button>
+
+</form>
+
+{% endblock %}
