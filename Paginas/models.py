@@ -1,29 +1,21 @@
+from pydoc import describe
 from django.db import models
 
-
-ESTADOS = [
-	('PR', 'Paraná'),
-	('SP', 'São Paulo',),
-	('SC', 'Santa Catarina')
+TIPO_CONTAS = [
+	('CC', 'Conta Corrente'),
+	('CP', 'Conta Poupança',),
+	('CS', 'Conta Salário'),
+	('CI', 'Conta Investimentos'),
 ]
 
-class Cidade(models.Model):
-	nome = models.CharField(max_length=100)
-	estado = models.CharField(max_length=2, choices=ESTADOS)
-
-	def __str__(self) -> str:
-		return '{} - {}'.format(self.nome, self.estado)
-
+# tipo_conta = models.CharField(max_length=2, choices=TIPO_CONTAS)
 
 class Pessoa(models.Model):
-	nome_completo = models.CharField(max_length=50, verbose_name='Qual seu nome?', help_text='Digite seu nome completo')
-	nascimento = models.DateField(verbose_name='Data de nascimento')
-	email = models.EmailField(max_length=100, verbose_name='E-mail')
-
-	cidade = models.ForeignKey(Cidade, on_delete=models.PROTECT)
+	nome_completo = models.CharField(max_length=50, verbose_name='Nome Completo', help_text='Digite seu nome completo')
+	telefone = models.CharField(max_length=11, verbose_name='Telefone', help_text='Digite seu nome telefone', null=True, blank=True)
 
 	def __str__(self) -> str:
-		return '{} ({})'.format(self.nome_completo, self.nascimento)
+		return '{}'.format(self.nome_completo)
 
 	class Meta:
 		ordering = ['nome_completo']
@@ -35,9 +27,16 @@ class Banco(models.Model):
 	def __str__(self) -> str:
 		return '{} - {}'.format(self.codigo, self.nome)
 
-class TipoConta(models.Model):
-	nome = models.CharField(max_length=100)
-	sigla = models.CharField(max_length=2)
+class TipoOperacao(models.Model):
+	nome = models.CharField(max_length=50)
+	descricao = models.CharField(max_length=100, verbose_name="Descrição")
 
 	def __str__(self) -> str:
-		return '{} - {}'.format(self.sigla, self.nome)
+		return '{}'.format(self.nome)
+
+class Categoria(models.Model):
+	nome = models.CharField(max_length=50)
+	descricao = models.CharField(max_length=100, verbose_name="Descrição")
+
+	def __str__(self) -> str:
+		return '{}'.format(self.nome)

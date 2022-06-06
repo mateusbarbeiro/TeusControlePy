@@ -151,18 +151,32 @@
             <!-- <li class="nav-heading">Pages</li>
 			-->
             <li class="nav-item">
-                <a class="nav-link collapsed" href="{% url 'cadastrar-banco' %}">
+                <a class="nav-link collapsed" href="{% url 'listar-banco' %}">
                     <i class="bi bi-bank"></i>
-                    <span>Banco</span>
+                    <span>Bancos</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link collapsed" href="{% url 'cadastrar-tipo-conta' %}">
+                <a class="nav-link collapsed" href="{% url 'listar-categoria' %}">
+                    <i class="bi bi-columns"></i>
+                    <span>Categorias</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="{% url 'listar-tipo-operacao' %}">
+                    <i class="bi bi-app-indicator"></i>
+                    <span>Tipo Operações</span>
+                </a>
+            </li>
+
+            <!-- <li class="nav-item">
+                <a class="nav-link collapsed" href="">
                     <i class="bi bi-bank"></i>
                     <span>Tipo de Contas</span>
                 </a>
-            </li>
+            </li> -->
             <!-- End Profile Page Nav -->
         </ul>
 
@@ -200,7 +214,7 @@
 
     <!-- ======= Footer ======= -->
     {% block footer %}
-    <footer id="footer" class="footer">
+    <footer id="footer" class="new-footer">
         <div class="copyright">
             &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
         </div>
