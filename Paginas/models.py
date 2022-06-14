@@ -40,3 +40,10 @@ class Categoria(models.Model):
 
 	def __str__(self) -> str:
 		return '{}'.format(self.nome)
+
+class TipoConta(models.Model):
+	nome = models.CharField(max_length=50)
+	descricao = models.CharField(max_length=100, verbose_name="Descrição")
+
+	def __str__(self) -> str:
+		return '{} - {}'.format(self.nome, descricao)

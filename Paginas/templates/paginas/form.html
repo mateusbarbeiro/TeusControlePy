@@ -12,6 +12,8 @@
 <form method="post">
     {% csrf_token %} {{ form|crispy }}
 
+    <br />
+    <a href="{{ request.META.HTTP_REFERER }}" class="btn btn-warning">Voltar</a>
     <button type="submit" class="btn btn-primary">
 		Salvar
 	</button>

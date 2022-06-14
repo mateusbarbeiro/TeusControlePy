@@ -1,14 +1,14 @@
 {% extends 'paginas/modelo.html' %} {% load static %} {% block pagetitle %}
-<h1>Lista de bancos
-    <a href="{% url 'cadastrar-banco' %}" class="btn btn-primary float-right ms-5">
-		Cadastrar Bancos
+<h1>Lista de tipos de contas
+    <a href="{% url 'cadastrar-tipo-conta' %}" class="btn btn-primary float-right ms-5">
+		Cadastrar tipo de contas
 	</a>
 </h1>
 {% endblock %} {% block breadcrumb %}
 <nav>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
-        <li class="breadcrumb-item active">Bancos</li>
+        <li class="breadcrumb-item active">Tipo de Conta</li>
     </ol>
 </nav>
 {% endblock %} {% block main %}
@@ -16,7 +16,7 @@
     <thead>
         <tr>
             <th>Nome</th>
-            <th>Código</th>
+            <th>Descrição</th>
             <th>Opções</th>
         </tr>
     </thead>
@@ -25,10 +25,10 @@
         {% for obj in object_list %}
         <tr>
             <td>{{ obj.nome }}</td>
-            <td>{{ obj.codigo }}</td>
+            <td>{{ obj.descricao }}</td>
             <td>
-                <a href="{% url 'editar-banco' obj.pk %}" class="btn btn-warning">Editar</a>
-                <a href="{% url 'excluir-banco' obj.pk %}" class="btn btn-danger">Excluir</a>
+                <a href="{% url 'editar-tipo-conta' obj.pk %}" class="btn btn-warning">Editar</a>
+                <a href="{% url 'excluir-tipo-conta' obj.pk %}" class="btn btn-danger">Excluir</a>
             </td>
         </tr>
         {% empty %}

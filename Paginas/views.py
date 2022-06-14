@@ -5,7 +5,7 @@ from django.views.generic.list import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from braces.views import GroupRequiredMixin
 
-from .models import Banco, Categoria, TipoOperacao
+from .models import Banco, Categoria, TipoOperacao, TipoConta
 class Index(TemplateView): 
 	template_name = "paginas/modelo.html"
 
@@ -31,6 +31,13 @@ class TipoOperacaoCreate(GroupRequiredMixin, LoginRequiredMixin, CreateView):
 	success_url = reverse_lazy('listar-tipo-operacao')
 	group_required = u"Administrador"
 
+class TipoContaCreate(GroupRequiredMixin, LoginRequiredMixin, CreateView):
+	model = TipoConta
+	fields = ['nome', 'descricao',]
+	template_name = 'Paginas/form.html'
+	success_url = reverse_lazy('listar-tipo-conta')
+	group_required = u"Administrador"
+
 ######################################################
 
 class BancoUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
@@ -54,6 +61,13 @@ class TipoOperacaoUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
 	success_url = reverse_lazy('listar-tipo-operacao')
 	group_required = u"Administrador"
 
+class TipoContaUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
+	model = TipoConta
+	fields = ['nome', 'descricao',]
+	template_name = 'Paginas/form.html'
+	success_url = reverse_lazy('listar-tipo-conta')
+	group_required = u"Administrador"
+
 ######################################################
 
 class BancoDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
@@ -74,6 +88,12 @@ class TipoOperacaoDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
 	success_url = reverse_lazy('listar-tipo-operacao')
 	group_required = u"Administrador"
 	
+class TipoContaDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
+	model = TipoConta
+	template_name = 'Paginas/form-delete.html'
+	success_url = reverse_lazy('listar-tipo-conta')
+	group_required = u"Administrador"
+
 ######################################################
 class BancoList(GroupRequiredMixin, LoginRequiredMixin, ListView):
 	model = Banco
@@ -88,4 +108,9 @@ class CategoriaList(GroupRequiredMixin, LoginRequiredMixin, ListView):
 class TipoOperacaoList(GroupRequiredMixin, LoginRequiredMixin, ListView):
 	model = TipoOperacao
 	template_name = 'paginas/listas/tipo-operacao.html'
+	group_required = u"Administrador"
+
+class TipoContaList(GroupRequiredMixin, LoginRequiredMixin, ListView):
+	model = TipoConta
+	template_name = 'paginas/listas/tipo-conta.html'
 	group_required = u"Administrador"
