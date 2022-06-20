@@ -1,5 +1,6 @@
-from pydoc import describe
+from statistics import mode
 from django.db import models
+from django.contrib.auth.models import User
 
 TIPO_CONTAS = [
 	('CC', 'Conta Corrente'),
@@ -12,7 +13,10 @@ TIPO_CONTAS = [
 
 class Pessoa(models.Model):
 	nome_completo = models.CharField(max_length=50, verbose_name='Nome Completo', help_text='Digite seu nome completo')
-	telefone = models.CharField(max_length=11, verbose_name='Telefone', help_text='Digite seu nome telefone', null=True, blank=True)
+	cpf = models.CharField(max_length=14)
+	telefone = models.CharField(max_length=15, verbose_name='Telefone', help_text='Digite seu nome telefone', null=True, blank=True)
+	
+	usuario = models.OneToOneField(User, on_delete=models.PROTECT)
 
 	def __str__(self) -> str:
 		return '{}'.format(self.nome_completo)
@@ -47,3 +51,45 @@ class TipoConta(models.Model):
 
 	def __str__(self) -> str:
 		return '{} - {}'.format(self.nome, descricao)
+
+class ContaBancaria(models.Model):
+	banco = models.ForeignKey(Banco, on_delete=models.PROTECT)
+	tipo_conta = models.ForeignKey(TipoConta, on_delete=models.PROTECT)
+	agencia = models.CharField(verbose_name='Agência', max_length=50)
+	conta = models.CharField(max_length=10)
+	valor_total = models.DecimalField(max_digits=99999999999, decimal_places=0)
+	conjunta = models.BooleanField()
+
+	usuario = models.ForeignKey(User, on_delete=models.PROTECT)
+
+	# dentro da view, criar metodo
+	# def form_valid(self, form):
+	# 	form.instance.usuario = self.request.user
+
+	# 	# valida dados do form antes de persistir objeto
+	# 	url = super().form_valid(form)
+	# 	# objetos já foram persistidos
+
+	# 	return url
+
+class Movimentacao(models.Model):
+	descricao = models.CharField(max_length=100, verbose_name="Descrição")
+	categoria = models.ForeignKey(Categoria, on_delete=models.PROTECT)
+	tipo_operacao = models.ForeignKey(TipoOperacao, on_delete=models.PROTECT, verbose_name="Tipo Operação")
+	valor = models.DecimalField(decimal_places= 0, max_digits=50)
+	cadastrado_em = models.DateTimeField(auto_now_add=True)
+	atualizado_em = models.DateTimeField(auto_now=True)
+
+	# # dentro da view, criar metodo
+	# def form_valid(self, form):
+	# 	# valida dados do form antes de persistir objeto
+	# 	url = super().form_valid(form)
+
+	# 	# objetos já foram persistidos
+	# 	# criar entidades de historico extrato
+	# 	print(self.object.pk) # acessa objeto recem persistido
+	# 	# caso ocorra uma modificação no objeto deve chamar para salvar
+	# 	# self.object.save()
+
+	# 	return url
+
