@@ -1,0 +1,48 @@
+{% extends 'paginas/modelo.html' %} {% load static %} {% block pagetitle %}
+<h1>Lista de contas bancarias
+    <a href="{% url 'cadastrar-conta-bancaria' %}" class="btn btn-primary float-right ms-5">
+		Cadastrar Conta Bancária
+	</a>
+</h1>
+{% endblock %} {% block breadcrumb %}
+<nav>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+        <li class="breadcrumb-item active">Contas Bancárias</li>
+    </ol>
+</nav>
+{% endblock %} {% block main %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Banco</th>
+            <th>Agência</th>
+            <th>Nº da Conta</th>
+            <th>Tipo de Conta</th>
+            <th>Conjunta</th>
+            <th>Saldo</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for obj in object_list %}
+        <tr>
+            <td>{{ obj.banco }}</td>
+            <td>{{ obj.agencia }}</td>
+            <td>{{ obj.conta }}</td>
+            <td>{{ obj.tipo_conta }}</td>
+            <td>{{ obj.conjunta }}</td>
+            <td>{{ obj.valor_total }}</td>
+            <td>
+                <a href="{% url 'editar-conta-bancaria' obj.pk %}" class="btn btn-warning">Editar</a>
+                <a href="{% url 'excluir-conta-bancaria' obj.pk %}" class="btn btn-danger">Excluir</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="100%">Nenhum registro encontrado.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

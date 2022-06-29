@@ -4,8 +4,9 @@ from django.views.generic.list import ListView
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from braces.views import GroupRequiredMixin
+from django.shortcuts import get_object_or_404
 
-from .models import Banco, Categoria, TipoOperacao, TipoConta, Movimentacao
+from .models import Banco, Categoria, ContaBancaria, TipoOperacao, TipoConta, Movimentacao
 class Index(TemplateView): 
 	template_name = "paginas/modelo.html"
 
@@ -42,6 +43,21 @@ class MovimentacaoCreate(LoginRequiredMixin, CreateView):
 	fields = ['descricao', 'categoria', 'tipo_operacao', 'valor', 'data_e_hora']
 	template_name = 'Paginas/form.html'
 	success_url = reverse_lazy('listar-movimentacao')
+
+class ContaBancariaCreate(LoginRequiredMixin, CreateView):
+	model = ContaBancaria
+	fields = ['tipo_conta', 'conjunta', 'banco', 'agencia', 'conta', 'valor_total']
+	template_name = 'Paginas/form.html'
+	success_url = reverse_lazy('listar-conta-bancaria')
+
+	def form_valid(self, form):
+		form.instance.usuario = self.request.user
+
+		url = super().form_valid(form)
+
+		# self.object.conjunta = True // acessa objeto recém persistido
+		# self.object.save() // salva alteração realizada
+		return url
 
 ######################################################
 
@@ -80,6 +96,16 @@ class MovimentacaoUpdate(LoginRequiredMixin, UpdateView):
 	success_url = reverse_lazy('listar-movimentacao')
 
 
+class ContaBancariaUpdate(LoginRequiredMixin, UpdateView):
+	model = ContaBancaria
+	fields = ['tipo_conta', 'conjunta', 'banco', 'agencia', 'conta', 'valor_total']
+	template_name = 'Paginas/form.html'
+	success_url = reverse_lazy('listar-conta-bancaria')
+
+	def get_object(self):
+		self.object = get_object_or_404(ContaBancaria, pk=self.kwargs['pk'], usuario=self.request.user)
+		return self.object
+
 ######################################################
 
 class BancoDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
@@ -109,6 +135,11 @@ class TipoContaDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
 class MovimentacaoDelete(LoginRequiredMixin, DeleteView):
 	model = Movimentacao
 	template_name = 'Paginas/form-delete.html'
+	success_url = reverse_lazy('listar-conta-bancaria')
+
+class ContaBancariaDelete(LoginRequiredMixin, DeleteView):
+	model = ContaBancaria
+	template_name = 'Paginas/form-delete.html'
 	success_url = reverse_lazy('listar-movimentacao')
 
 ######################################################
@@ -135,3 +166,13 @@ class TipoContaList(GroupRequiredMixin, LoginRequiredMixin, ListView):
 class MovimentacaoList(LoginRequiredMixin, ListView):
 	model = Movimentacao
 	template_name = 'paginas/listas/movimentacao.html'
+
+class ContaBancariaList(LoginRequiredMixin, ListView):
+	model = Movimentacao
+	template_name = 'paginas/listas/conta-bancaria.html'
+	success_url = reverse_lazy('listar-conta-bancaria')
+
+	def get_queryset(self):
+		
+		self.object_list = ContaBancaria.objects.filter(usuario = self.request.user)
+		return self.object_list

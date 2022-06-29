@@ -50,7 +50,7 @@ class TipoConta(models.Model):
 	descricao = models.CharField(max_length=100, verbose_name="Descrição")
 
 	def __str__(self) -> str:
-		return '{} - {}'.format(self.nome, descricao)
+		return '{} - {}'.format(self.nome, self.descricao)
 
 class ContaBancaria(models.Model):
 	banco = models.ForeignKey(Banco, on_delete=models.PROTECT)
@@ -62,16 +62,6 @@ class ContaBancaria(models.Model):
 
 	usuario = models.ForeignKey(User, on_delete=models.PROTECT)
 
-	# dentro da view, criar metodo
-	# def form_valid(self, form):
-	# 	form.instance.usuario = self.request.user
-
-	# 	# valida dados do form antes de persistir objeto
-	# 	url = super().form_valid(form)
-	# 	# objetos já foram persistidos
-
-	# 	return url
-
 class Movimentacao(models.Model):
 	descricao = models.CharField(max_length=100, verbose_name="Descrição")
 	categoria = models.ForeignKey(Categoria, on_delete=models.PROTECT)
@@ -80,16 +70,4 @@ class Movimentacao(models.Model):
 	cadastrado_em = models.DateTimeField(auto_now_add=True)
 	atualizado_em = models.DateTimeField(auto_now=True)
 
-	# # dentro da view, criar metodo
-	# def form_valid(self, form):
-	# 	# valida dados do form antes de persistir objeto
-	# 	url = super().form_valid(form)
-
-	# 	# objetos já foram persistidos
-	# 	# criar entidades de historico extrato
-	# 	print(self.object.pk) # acessa objeto recem persistido
-	# 	# caso ocorra uma modificação no objeto deve chamar para salvar
-	# 	# self.object.save()
-
-	# 	return url
-
+	
