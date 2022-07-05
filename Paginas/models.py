@@ -1,4 +1,3 @@
-from statistics import mode
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -7,6 +6,11 @@ TIPO_CONTAS = [
 	('CP', 'Conta Poupança',),
 	('CS', 'Conta Salário'),
 	('CI', 'Conta Investimentos'),
+]
+
+TIPO_MOVIMENTACOES = [
+	('E', 'Entrada'),
+	('S', 'Saída'),
 ]
 
 # tipo_conta = models.CharField(max_length=2, choices=TIPO_CONTAS)
@@ -31,16 +35,17 @@ class Banco(models.Model):
 	def __str__(self) -> str:
 		return '{} - {}'.format(self.codigo, self.nome)
 
-class TipoOperacao(models.Model):
-	nome = models.CharField(max_length=50)
-	descricao = models.CharField(max_length=100, verbose_name="Descrição")
+# class TipoOperacao(models.Model):
+# 	nome = models.CharField(max_length=50)
+# 	descricao = models.CharField(max_length=100, verbose_name="Descrição")
 
-	def __str__(self) -> str:
-		return '{}'.format(self.nome)
+# 	def __str__(self) -> str:
+# 		return '{}'.format(self.nome)
 
 class Categoria(models.Model):
 	nome = models.CharField(max_length=50)
 	descricao = models.CharField(max_length=100, verbose_name="Descrição")
+	tipo_movimetacao = models.CharField(max_length=2, choices=TIPO_MOVIMENTACOES, default="S")
 
 	def __str__(self) -> str:
 		return '{}'.format(self.nome)
@@ -62,12 +67,16 @@ class ContaBancaria(models.Model):
 
 	usuario = models.ForeignKey(User, on_delete=models.PROTECT)
 
-class Movimentacao(models.Model):
+	def __str__(self) -> str:
+		return '{} - {}/{}'.format(self.banco.nome, self.agencia, self.conta)
+
+class MovimentacaoEntrada(models.Model):
 	descricao = models.CharField(max_length=100, verbose_name="Descrição")
 	categoria = models.ForeignKey(Categoria, on_delete=models.PROTECT)
-	tipo_operacao = models.ForeignKey(TipoOperacao, on_delete=models.PROTECT, verbose_name="Tipo Operação")
 	valor = models.DecimalField(decimal_places= 0, max_digits=50)
 	cadastrado_em = models.DateTimeField(auto_now_add=True)
 	atualizado_em = models.DateTimeField(auto_now=True)
+		
+	conta_bancaria = models.ForeignKey(ContaBancaria, verbose_name="Conta Bancária", on_delete=models.PROTECT)
 
 	

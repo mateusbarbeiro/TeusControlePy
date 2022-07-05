@@ -6,10 +6,16 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from braces.views import GroupRequiredMixin
 from django.shortcuts import get_object_or_404
 
-from .models import Banco, Categoria, ContaBancaria, TipoOperacao, TipoConta, Movimentacao
+from .models import Banco, Categoria, ContaBancaria, TipoConta, MovimentacaoEntrada
 class Index(TemplateView): 
 	template_name = "paginas/modelo.html"
 
+	def get_context_data(self, *args, **kwargs):
+		dados = super().get_context_data(*args, **kwargs)
+
+
+
+		return dados
 class BancoCreate(GroupRequiredMixin, LoginRequiredMixin, CreateView):
 	model = Banco
 	fields = ['nome', 'codigo',]
@@ -19,17 +25,17 @@ class BancoCreate(GroupRequiredMixin, LoginRequiredMixin, CreateView):
 
 class CategoriaCreate(GroupRequiredMixin, LoginRequiredMixin, CreateView):
 	model = Categoria
-	fields = ['nome', 'descricao',]
+	fields = ['nome', 'descricao', 'tipo_movimetacao']
 	template_name = 'Paginas/form.html'
 	success_url = reverse_lazy('listar-categoria')
 	group_required = u"Administrador"
 
-class TipoOperacaoCreate(GroupRequiredMixin, LoginRequiredMixin, CreateView):
-	model = TipoOperacao
-	fields = ['nome', 'descricao',]
-	template_name = 'Paginas/form.html'
-	success_url = reverse_lazy('listar-tipo-operacao')
-	group_required = u"Administrador"
+# class TipoOperacaoCreate(GroupRequiredMixin, LoginRequiredMixin, CreateView):
+# 	model = TipoOperacao
+# 	fields = ['nome', 'descricao',]
+# 	template_name = 'Paginas/form.html'
+# 	success_url = reverse_lazy('listar-tipo-operacao')
+# 	group_required = u"Administrador"
 
 class TipoContaCreate(GroupRequiredMixin, LoginRequiredMixin, CreateView):
 	model = TipoConta
@@ -38,11 +44,11 @@ class TipoContaCreate(GroupRequiredMixin, LoginRequiredMixin, CreateView):
 	success_url = reverse_lazy('listar-tipo-conta')
 	group_required = u"Administrador"
 
-class MovimentacaoCreate(LoginRequiredMixin, CreateView):
-	model = Movimentacao
-	fields = ['descricao', 'categoria', 'tipo_operacao', 'valor', 'data_e_hora']
+class MovimentacaoEntradaCreate(LoginRequiredMixin, CreateView):
+	model = MovimentacaoEntrada
+	fields = ['descricao', 'categoria', 'valor', 'conta_bancaria']
 	template_name = 'Paginas/form.html'
-	success_url = reverse_lazy('listar-movimentacao')
+	success_url = reverse_lazy('listar-movimentacao-entrada')
 
 class ContaBancariaCreate(LoginRequiredMixin, CreateView):
 	model = ContaBancaria
@@ -70,17 +76,17 @@ class BancoUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
 
 class CategoriaUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
 	model = Categoria
-	fields = ['nome', 'descricao',]
+	fields = ['nome', 'descricao', 'tipo_movimetacao']
 	template_name = 'Paginas/form.html'
 	success_url = reverse_lazy('listar-categoria')
 	group_required = u"Administrador"
 
-class TipoOperacaoUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
-	model = TipoOperacao
-	fields = ['nome', 'descricao',]
-	template_name = 'Paginas/form.html'
-	success_url = reverse_lazy('listar-tipo-operacao')
-	group_required = u"Administrador"
+# class TipoOperacaoUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
+# 	model = TipoOperacao
+# 	fields = ['nome', 'descricao',]
+# 	template_name = 'Paginas/form.html'
+# 	success_url = reverse_lazy('listar-tipo-operacao')
+# 	group_required = u"Administrador"
 
 class TipoContaUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
 	model = TipoConta
@@ -89,11 +95,11 @@ class TipoContaUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
 	success_url = reverse_lazy('listar-tipo-conta')
 	group_required = u"Administrador"
 
-class MovimentacaoUpdate(LoginRequiredMixin, UpdateView):
-	model = Movimentacao
-	fields = ['descricao', 'categoria', 'tipo_operacao', 'valor', 'data_e_hora']
+class MovimentacaoEntradaUpdate(LoginRequiredMixin, UpdateView):
+	model = MovimentacaoEntrada
+	fields = ['descricao', 'categoria', 'valor', 'conta_bancaria']
 	template_name = 'Paginas/form.html'
-	success_url = reverse_lazy('listar-movimentacao')
+	success_url = reverse_lazy('listar-movimentacao-entrada')
 
 
 class ContaBancariaUpdate(LoginRequiredMixin, UpdateView):
@@ -103,7 +109,10 @@ class ContaBancariaUpdate(LoginRequiredMixin, UpdateView):
 	success_url = reverse_lazy('listar-conta-bancaria')
 
 	def get_object(self):
-		self.object = get_object_or_404(ContaBancaria, pk=self.kwargs['pk'], usuario=self.request.user)
+		self.object = get_object_or_404(
+			ContaBancaria, 
+			pk=self.kwargs['pk'], 
+			usuario=self.request.user)
 		return self.object
 
 ######################################################
@@ -120,11 +129,11 @@ class CategoriaDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
 	success_url = reverse_lazy('listar-categoria')
 	group_required = u"Administrador"
 
-class TipoOperacaoDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
-	model = TipoOperacao
-	template_name = 'Paginas/form-delete.html'
-	success_url = reverse_lazy('listar-tipo-operacao')
-	group_required = u"Administrador"
+# class TipoOperacaoDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
+# 	model = TipoOperacao
+# 	template_name = 'Paginas/form-delete.html'
+# 	success_url = reverse_lazy('listar-tipo-operacao')
+# 	group_required = u"Administrador"
 	
 class TipoContaDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
 	model = TipoConta
@@ -132,15 +141,22 @@ class TipoContaDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
 	success_url = reverse_lazy('listar-tipo-conta')
 	group_required = u"Administrador"
 
-class MovimentacaoDelete(LoginRequiredMixin, DeleteView):
-	model = Movimentacao
+class MovimentacaoEntradaDelete(LoginRequiredMixin, DeleteView):
+	model = MovimentacaoEntrada
 	template_name = 'Paginas/form-delete.html'
-	success_url = reverse_lazy('listar-conta-bancaria')
+	success_url = reverse_lazy('listar-movimentacao-entrada')
 
 class ContaBancariaDelete(LoginRequiredMixin, DeleteView):
 	model = ContaBancaria
 	template_name = 'Paginas/form-delete.html'
-	success_url = reverse_lazy('listar-movimentacao')
+	success_url = reverse_lazy('listar-conta-bancaria')
+
+	def get_object(self):
+		self.object = get_object_or_404(
+			ContaBancaria, 
+			pk=self.kwargs['pk'], 
+			usuario=self.request.user)
+		return self.object
 
 ######################################################
 class BancoList(GroupRequiredMixin, LoginRequiredMixin, ListView):
@@ -153,26 +169,27 @@ class CategoriaList(GroupRequiredMixin, LoginRequiredMixin, ListView):
 	template_name = 'paginas/listas/categoria.html'
 	group_required = u"Administrador"
 
-class TipoOperacaoList(GroupRequiredMixin, LoginRequiredMixin, ListView):
-	model = TipoOperacao
-	template_name = 'paginas/listas/tipo-operacao.html'
-	group_required = u"Administrador"
+# class TipoOperacaoList(GroupRequiredMixin, LoginRequiredMixin, ListView):
+# 	model = TipoOperacao
+# 	template_name = 'paginas/listas/tipo-operacao.html'
+# 	group_required = u"Administrador"
 
 class TipoContaList(GroupRequiredMixin, LoginRequiredMixin, ListView):
 	model = TipoConta
 	template_name = 'paginas/listas/tipo-conta.html'
 	group_required = u"Administrador"
 
-class MovimentacaoList(LoginRequiredMixin, ListView):
-	model = Movimentacao
-	template_name = 'paginas/listas/movimentacao.html'
+class MovimentacaoEntradaList(LoginRequiredMixin, ListView):
+	model = MovimentacaoEntrada
+	template_name = 'paginas/listas/movimentacao-entrada.html'
 
 class ContaBancariaList(LoginRequiredMixin, ListView):
-	model = Movimentacao
+	model = ContaBancaria
 	template_name = 'paginas/listas/conta-bancaria.html'
 	success_url = reverse_lazy('listar-conta-bancaria')
 
 	def get_queryset(self):
 		
-		self.object_list = ContaBancaria.objects.filter(usuario = self.request.user)
+		self.object_list = ContaBancaria.objects.filter(
+			usuario = self.request.user)
 		return self.object_list
