@@ -62,7 +62,7 @@ class ContaBancaria(models.Model):
 	tipo_conta = models.ForeignKey(TipoConta, on_delete=models.PROTECT)
 	agencia = models.CharField(verbose_name='Agência', max_length=50)
 	conta = models.CharField(max_length=10)
-	valor_total = models.DecimalField(max_digits=99999999999, decimal_places=0)
+	valor_total = models.DecimalField(max_digits=99999999999, decimal_places=2)
 	conjunta = models.BooleanField()
 
 	usuario = models.ForeignKey(User, on_delete=models.PROTECT)
@@ -73,10 +73,25 @@ class ContaBancaria(models.Model):
 class MovimentacaoEntrada(models.Model):
 	descricao = models.CharField(max_length=100, verbose_name="Descrição")
 	categoria = models.ForeignKey(Categoria, on_delete=models.PROTECT)
-	valor = models.DecimalField(decimal_places= 0, max_digits=50)
+	valor = models.DecimalField(decimal_places= 2, max_digits=50)
 	cadastrado_em = models.DateTimeField(auto_now_add=True)
 	atualizado_em = models.DateTimeField(auto_now=True)
 		
 	conta_bancaria = models.ForeignKey(ContaBancaria, verbose_name="Conta Bancária", on_delete=models.PROTECT)
 
-	
+class MovimentacaoSaida(models.Model):
+	descricao = models.CharField(max_length=100, verbose_name="Descrição")
+	categoria = models.ForeignKey(Categoria, on_delete=models.PROTECT)
+	valor = models.DecimalField(decimal_places= 2, max_digits=50)
+	cadastrado_em = models.DateTimeField(auto_now_add=True)
+	atualizado_em = models.DateTimeField(auto_now=True)
+		
+	conta_bancaria = models.ForeignKey(ContaBancaria, verbose_name="Conta Bancária", on_delete=models.PROTECT)
+
+class HistoricoExtrato(models.Model):
+	cadastrado_em = models.DateTimeField(auto_now_add=True)
+	valor_conta_antigo = models.DecimalField(decimal_places= 2, max_digits=50)
+	valor_conta_atual = models.DecimalField(decimal_places= 2, max_digits=50)
+	valor_movimentacao = models.DecimalField(decimal_places= 2, max_digits=50)
+
+	conta_bancaria = models.ForeignKey(ContaBancaria, verbose_name="Conta Bancária", on_delete=models.CASCADE)
