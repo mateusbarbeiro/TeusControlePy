@@ -67,9 +67,13 @@ class MovimentacaoEntradaCreate(LoginRequiredMixin, CreateView):
 				valor_conta_antigo = conta_total,
 				valor_conta_atual = conta_novo_total,
 				valor_movimentacao = self.object.valor,
-				conta_bancaria = self.object.conta_bancaria
+				conta_bancaria = self.object.conta_bancaria,
+				tipo_movimetacao = 'E',
 			)
-		
+
+			self.object.conta_bancaria.valor_total = conta_novo_total
+			self.object.conta_bancaria.save()
+
 		except:
 			self.object.delete()
 			form.add_error(None, "Ocorreu um erro ao cadastrar histórico da movimentação")
@@ -89,6 +93,31 @@ class MovimentacaoSaidaCreate(LoginRequiredMixin, CreateView):
 			usuario = self.request.user)
 
 		return data
+	
+	def form_valid(self, form) :
+		url = super().form_valid(form)
+
+		try:
+			conta_total = self.object.conta_bancaria.valor_total
+			conta_novo_total = self.object.conta_bancaria.valor_total - self.object.valor
+			# para cada movimentação, gerar uma histórico de valores
+			HistoricoExtrato.objects.create(
+				valor_conta_antigo = conta_total,
+				valor_conta_atual = conta_novo_total,
+				valor_movimentacao = self.object.valor,
+				conta_bancaria = self.object.conta_bancaria,
+				tipo_movimetacao = 'S',
+			)
+
+			self.object.conta_bancaria.valor_total = conta_novo_total
+			self.object.conta_bancaria.save()
+
+		except:
+			self.object.delete()
+			form.add_error(None, "Ocorreu um erro ao cadastrar histórico da movimentação")
+			return super().form_invalid(form)
+		return url
+
 
 class ContaBancariaCreate(LoginRequiredMixin, CreateView):
 	model = ContaBancaria

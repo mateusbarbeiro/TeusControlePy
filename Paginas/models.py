@@ -1,3 +1,4 @@
+from re import S
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -79,6 +80,9 @@ class MovimentacaoEntrada(models.Model):
 		
 	conta_bancaria = models.ForeignKey(ContaBancaria, verbose_name="Conta Bancária", on_delete=models.PROTECT)
 
+	def __str__(self) -> str:
+		return 'R${}: {} - {}'.format(self.valor, self.categoria, self.descricao)
+
 class MovimentacaoSaida(models.Model):
 	descricao = models.CharField(max_length=100, verbose_name="Descrição")
 	categoria = models.ForeignKey(Categoria, on_delete=models.PROTECT)
@@ -88,10 +92,18 @@ class MovimentacaoSaida(models.Model):
 		
 	conta_bancaria = models.ForeignKey(ContaBancaria, verbose_name="Conta Bancária", on_delete=models.PROTECT)
 
+	def __str__(self) -> str:
+		return 'R${}: {} - {}'.format(self.valor, self.categoria, self.descricao)
+
 class HistoricoExtrato(models.Model):
 	cadastrado_em = models.DateTimeField(auto_now_add=True)
 	valor_conta_antigo = models.DecimalField(decimal_places= 2, max_digits=50)
 	valor_conta_atual = models.DecimalField(decimal_places= 2, max_digits=50)
 	valor_movimentacao = models.DecimalField(decimal_places= 2, max_digits=50)
+	tipo_movimetacao = models.CharField(max_length=2, choices=TIPO_MOVIMENTACOES, default="S")
 
 	conta_bancaria = models.ForeignKey(ContaBancaria, verbose_name="Conta Bancária", on_delete=models.CASCADE)
+
+	def __str__(self) -> str:
+		return 'Valor de {} - R${}, saldo da conta era R${}, passou a ser R${}'.format(self.get_tipo_movimetacao_display(), 
+			self.valor_movimentacao, self.valor_conta_antigo, self.valor_conta_atual)
