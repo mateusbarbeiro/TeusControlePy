@@ -10,7 +10,17 @@
 </nav>
 {% endblock %} {% block main %}
 <form method="post">
-    {% csrf_token %} {{ form|crispy }}
+    {% csrf_token %} {{ form|crispy }} {% if nao_alterar %}
+
+    <label for="">
+		Valor: R${{ object.valor }}
+	</label>
+
+    <br>
+
+    <label for="">
+		Conta Bancaria: {{ object.conta_bancaria }}
+	</label> {% endif %}
 
     <br />
     <a href="{{ request.META.HTTP_REFERER }}" class="btn btn-warning">Voltar</a>

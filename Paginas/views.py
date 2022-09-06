@@ -14,6 +14,8 @@ class Index(TemplateView):
 		dados = super().get_context_data(*args, **kwargs)
 
 		return dados
+
+
 class BancoCreate(GroupRequiredMixin, LoginRequiredMixin, CreateView):
 	model = Banco
 	fields = ['nome', 'codigo',]
@@ -21,12 +23,14 @@ class BancoCreate(GroupRequiredMixin, LoginRequiredMixin, CreateView):
 	success_url = reverse_lazy('listar-banco')
 	group_required = u"Administrador"
 
+
 class CategoriaCreate(GroupRequiredMixin, LoginRequiredMixin, CreateView):
 	model = Categoria
 	fields = ['nome', 'descricao', 'tipo_movimetacao']
 	template_name = 'Paginas/form.html'
 	success_url = reverse_lazy('listar-categoria')
 	group_required = u"Administrador"
+
 
 # class TipoOperacaoCreate(GroupRequiredMixin, LoginRequiredMixin, CreateView):
 # 	model = TipoOperacao
@@ -42,6 +46,7 @@ class TipoContaCreate(GroupRequiredMixin, LoginRequiredMixin, CreateView):
 	success_url = reverse_lazy('listar-tipo-conta')
 	group_required = u"Administrador"
 
+
 class MovimentacaoEntradaCreate(LoginRequiredMixin, CreateView):
 	model = MovimentacaoEntrada
 	fields = ['descricao', 'categoria', 'valor', 'conta_bancaria']
@@ -53,6 +58,9 @@ class MovimentacaoEntradaCreate(LoginRequiredMixin, CreateView):
 
 		data['form'].fields['conta_bancaria'].queryset = ContaBancaria.objects.filter(
 			usuario = self.request.user)
+		data['form'].fields['categoria'].queryset = Categoria.objects.filter(
+			tipo_movimetacao = 'E')
+		
 
 		return data
 	
@@ -80,6 +88,7 @@ class MovimentacaoEntradaCreate(LoginRequiredMixin, CreateView):
 			return super().form_invalid(form)
 		return url
 
+
 class MovimentacaoSaidaCreate(LoginRequiredMixin, CreateView):
 	model = MovimentacaoSaida
 	fields = ['descricao', 'categoria', 'valor', 'conta_bancaria']
@@ -91,6 +100,8 @@ class MovimentacaoSaidaCreate(LoginRequiredMixin, CreateView):
 
 		data['form'].fields['conta_bancaria'].queryset = ContaBancaria.objects.filter(
 			usuario = self.request.user)
+		data['form'].fields['categoria'].queryset = Categoria.objects.filter(
+			tipo_movimetacao = 'S')
 
 		return data
 	
@@ -143,12 +154,14 @@ class BancoUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
 	success_url = reverse_lazy('listar-banco')
 	group_required = u"Administrador"
 
+
 class CategoriaUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
 	model = Categoria
 	fields = ['nome', 'descricao', 'tipo_movimetacao']
 	template_name = 'Paginas/form.html'
 	success_url = reverse_lazy('listar-categoria')
 	group_required = u"Administrador"
+
 
 # class TipoOperacaoUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
 # 	model = TipoOperacao
@@ -164,17 +177,31 @@ class TipoContaUpdate(GroupRequiredMixin, LoginRequiredMixin, UpdateView):
 	success_url = reverse_lazy('listar-tipo-conta')
 	group_required = u"Administrador"
 
+
 class MovimentacaoEntradaUpdate(LoginRequiredMixin, UpdateView):
 	model = MovimentacaoEntrada
-	fields = ['descricao', 'categoria', 'valor', 'conta_bancaria']
+	fields = ['descricao', 'categoria']
 	template_name = 'Paginas/form.html'
 	success_url = reverse_lazy('listar-movimentacao-entrada')
+
+	# def __init__(self, *args, **kwargs): 
+	# 	super(MovimentacaoEntradaUpdate, self).__init__(*args, **kwargs) 
+	# 	self.fields['valor'].disabled = True 
+	# 	self.fields['conta_bancaria'].disabled = True 
+	
+	# def resume_edit(request, r_id):
+	# 	r = Resume.get.object(pk=r_id)
+	# 	resume = ResumeModelForm(instance=r)
+	# 	resume.fields['email'].disabled = True 
+		
+	# 	return render(request, 'resumes/resume.html', context)
 
 	def get_context_data(self, *args, **kwargs):
 		data = super().get_context_data(**kwargs)
 
-		data['form'].fields['conta_bancaria'].queryset = ContaBancaria.objects.filter(
-			usuario = self.request.user)
+		data['form'].fields['categoria'].queryset = Categoria.objects.filter(
+			tipo_movimetacao = 'E')
+		data['nao_alterar'] = True
 
 		return data
 
@@ -185,17 +212,18 @@ class MovimentacaoEntradaUpdate(LoginRequiredMixin, UpdateView):
 			conta_bancaria__usuario=self.request.user)
 		return self.object	
 
+
 class MovimentacaoSaidaUpdate(LoginRequiredMixin, UpdateView):
 	model = MovimentacaoSaida
-	fields = ['descricao', 'categoria', 'valor', 'conta_bancaria']
+	fields = ['descricao', 'categoria']
 	template_name = 'Paginas/form.html'
 	success_url = reverse_lazy('listar-movimentacao-saida')
 
 	def get_context_data(self, *args, **kwargs):
 		data = super().get_context_data(**kwargs)
-
-		data['form'].fields['conta_bancaria'].queryset = ContaBancaria.objects.filter(
-			usuario = self.request.user)
+		data['form'].fields['categoria'].queryset = Categoria.objects.filter(
+			tipo_movimetacao = 'S')
+		data['nao_alterar'] = True
 
 		return data
 
@@ -228,11 +256,13 @@ class BancoDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
 	success_url = reverse_lazy('listar-banco')
 	group_required = u"Administrador"
 
+
 class CategoriaDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
 	model = Categoria
 	template_name = 'Paginas/form-delete.html'
 	success_url = reverse_lazy('listar-categoria')
 	group_required = u"Administrador"
+
 
 # class TipoOperacaoDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
 # 	model = TipoOperacao
@@ -246,6 +276,7 @@ class TipoContaDelete(GroupRequiredMixin, LoginRequiredMixin, DeleteView):
 	success_url = reverse_lazy('listar-tipo-conta')
 	group_required = u"Administrador"
 
+
 class MovimentacaoEntradaDelete(LoginRequiredMixin, DeleteView):
 	model = MovimentacaoEntrada
 	template_name = 'Paginas/form-delete.html'
@@ -258,6 +289,7 @@ class MovimentacaoEntradaDelete(LoginRequiredMixin, DeleteView):
 			conta_bancaria__usuario=self.request.user)
 		return self.object
 
+
 class MovimentacaoSaidaDelete(LoginRequiredMixin, DeleteView):
 	model = MovimentacaoSaida
 	template_name = 'Paginas/form-delete.html'
@@ -269,6 +301,7 @@ class MovimentacaoSaidaDelete(LoginRequiredMixin, DeleteView):
 			pk=self.kwargs['pk'], 
 			conta_bancaria__usuario=self.request.user)
 		return self.object
+
 
 class ContaBancariaDelete(LoginRequiredMixin, DeleteView):
 	model = ContaBancaria
@@ -283,25 +316,30 @@ class ContaBancariaDelete(LoginRequiredMixin, DeleteView):
 		return self.object
 
 ######################################################
+
 class BancoList(GroupRequiredMixin, LoginRequiredMixin, ListView):
 	model = Banco
 	template_name = 'paginas/listas/banco.html'
 	group_required = u"Administrador"
+
 
 class CategoriaList(GroupRequiredMixin, LoginRequiredMixin, ListView):
 	model = Categoria
 	template_name = 'paginas/listas/categoria.html'
 	group_required = u"Administrador"
 
+
 # class TipoOperacaoList(GroupRequiredMixin, LoginRequiredMixin, ListView):
 # 	model = TipoOperacao
 # 	template_name = 'paginas/listas/tipo-operacao.html'
 # 	group_required = u"Administrador"
 
+
 class TipoContaList(GroupRequiredMixin, LoginRequiredMixin, ListView):
 	model = TipoConta
 	template_name = 'paginas/listas/tipo-conta.html'
 	group_required = u"Administrador"
+
 
 class MovimentacaoEntradaList(LoginRequiredMixin, ListView):
 	model = MovimentacaoEntrada
@@ -313,6 +351,7 @@ class MovimentacaoEntradaList(LoginRequiredMixin, ListView):
 			conta_bancaria__usuario = self.request.user)
 		return self.object_list
 
+
 class MovimentacaoSaidaList(LoginRequiredMixin, ListView):
 	model = MovimentacaoSaida
 	template_name = 'paginas/listas/movimentacao-saida.html'
@@ -322,6 +361,7 @@ class MovimentacaoSaidaList(LoginRequiredMixin, ListView):
 		self.object_list = MovimentacaoSaida.objects.filter(
 			conta_bancaria__usuario = self.request.user)
 		return self.object_list
+
 
 class ContaBancariaList(LoginRequiredMixin, ListView):
 	model = ContaBancaria
