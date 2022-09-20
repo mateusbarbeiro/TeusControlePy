@@ -61,7 +61,6 @@ class MovimentacaoEntradaCreate(LoginRequiredMixin, CreateView):
 		data['form'].fields['categoria'].queryset = Categoria.objects.filter(
 			tipo_movimetacao = 'E')
 		
-
 		return data
 	
 	def form_valid(self, form) :

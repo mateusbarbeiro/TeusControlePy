@@ -1,18 +1,18 @@
-{% load static %}
+{% load static %} {% load crispy_forms_tags %}
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Login - Teus Economia</title>
+    <title>Pages / Register - NiceAdmin Bootstrap Template</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
     <!-- Favicons -->
-    <link href="{% static 'assets/img/favicon.png' %" rel="icon">
-    <link href="{% static 'assets/img/apple-touch-icon.png' %" rel="apple-touch-icon">
+    <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+    <link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
 
     <!-- Google Fonts -->
     <link href="https://fonts.gstatic.com" rel="preconnect">
@@ -49,7 +49,7 @@
                         <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
 
                             <div class="d-flex justify-content-center py-4">
-                                <a href="" class="logo d-flex align-items-center w-auto">
+                                <a href="{% url 'index' %}" class="logo d-flex align-items-center w-auto">
                                     <img src="{% static 'assets/img/logo.png' %}" alt="">
                                     <span class="d-none d-lg-block">TeusEconomia</span>
                                 </a>
@@ -61,44 +61,74 @@
                                 <div class="card-body">
                                     {% if not request.user.is_authenticated %}
                                     <div class="pt-4 pb-2">
-                                        <h5 class="card-title text-center pb-0 fs-4">Faça o login na sua conta</h5>
-                                        <p class="text-center small">Insira seu usuário e senha para entrar</p>
+                                        <h5 class="card-title text-center pb-0 fs-4">Criar Conta</h5>
+                                        <p class="text-center small">Insira suas informações pessoais
+                                        </p>
                                     </div>
 
-                                    {% if form.errors %}
-                                    <div class="alert alert-danger" role="alert">
-                                        <strong>Atenção!</strong> Usuário e senha incorretos.
-                                    </div>
-                                    {% endif %}
-                                    <form class="row g-3 needs-validation" method="post">
-
+                                    <form class="row g-3 needs-validation" novalidate method="POST">
                                         {% csrf_token %}
+                                        <!-- <div class="col-12">
+                                            <label for="nome_completo" class="form-label">Nome completo</label>
+                                            <input type="text" name="nome_completo" class="form-control" id="nome_completo" required>
+                                            <div class="invalid-feedback">Digite seu nome completo!</div>
+                                        </div>
+
                                         <div class="col-12">
-                                            <label for="yourUsername" class="form-label">Username</label>
+                                            <label for="cpf" class="form-label">CPF</label>
+                                            <input type="text" name="cpf" class="form-control" id="cpf" required>
+                                            <div class="invalid-feedback">Digite seu CPF!</div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <label for="telefone" class="form-label">Telefone</label>
+                                            <input type="text" name="telefone" class="form-control" id="telefone" required>
+                                            <div class="invalid-feedback">Digite seu Telefone!</div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <label for="yourEmail" class="form-label">Your Email</label>
+                                            <input type="email" name="email" class="form-control" id="yourEmail" required>
+                                            <div class="invalid-feedback">Please enter a valid Email adddress!</div>
+                                        </div> -->
+
+                                        <!-- <div class="col-12">
+                                            <label for="username" class="form-label">Username</label>
                                             <div class="input-group has-validation">
                                                 <span class="input-group-text" id="inputGroupPrepend">@</span>
-                                                <input type="text" name="username" class="form-control" id="yourUsername" required autofocus>
-                                                <div class="invalid-feedback">Please enter your username.</div>
+                                                <input type="text" name="username" class="form-control" id="username" required>
+                                                <div class="invalid-feedback">Insira seu username!</div>
                                             </div>
                                         </div>
 
                                         <div class="col-12">
-                                            <label for="yourPassword" class="form-label">Password</label>
-                                            <input type="password" name="password" class="form-control" id="yourPassword" required>
-                                            <div class="invalid-feedback">Please enter your password!</div>
+                                            <label for="password1" class="form-label">Senha</label>
+                                            <input type="password" name="password1" class="form-control" id="password1" required>
+                                            <div class="invalid-feedback">Insira sua senha!</div>
                                         </div>
 
                                         <div class="col-12">
+                                            <label for="password2" class="form-label">Senha</label>
+                                            <input type="password" name="password2" class="form-control" id="password2" required>
+                                            <div class="invalid-feedback">Insira sua senha!</div>
+                                        </div> -->
+
+                                        <!-- <div class="col-12">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" name="remember" value="true" id="rememberMe">
-                                                <label class="form-check-label" for="rememberMe">Remember me</label>
+                                                <input class="form-check-input" name="terms" type="checkbox" value="" id="acceptTerms" required>
+                                                <label class="form-check-label" for="acceptTerms">I agree and accept the
+													<a href="#">terms and conditions</a></label>
+                                                <div class="invalid-feedback">You must agree before submitting.</div>
                                             </div>
+                                        </div> -->
+
+                                        {{ form|crispy }}
+                                        <div class="col-12">
+                                            <button class="btn btn-primary w-100" type="submit">Criar Conta</button>
                                         </div>
                                         <div class="col-12">
-                                            <button class="btn btn-primary w-100" type="submit">Login</button>
-                                        </div>
-                                        <div class="col-12">
-                                            <p class="small mb-0">Não possui uma conta? <a href="{% url 'signup' %}">Create an account</a></p>
+                                            <p class="small mb-0">Já possui uma conta? <a href="{% url 'login' %}">Entre
+													Agora</a></p>
                                         </div>
                                     </form>
                                     {% else %}

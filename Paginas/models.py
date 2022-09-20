@@ -1,6 +1,8 @@
 from re import S
 from django.db import models
+from django.db.models.signals import post_save
 from django.contrib.auth.models import User
+from django.dispatch import receiver
 
 TIPO_CONTAS = [
 	('CC', 'Conta Corrente'),
@@ -28,6 +30,11 @@ class Pessoa(models.Model):
 
 	class Meta:
 		ordering = ['nome_completo']
+	
+	# @receiver(post_save, sender=User)
+	# def update_user_profile(sender, instance, created, **kwargs):
+	# 	if created: Pessoa.objects.create(user=instance)
+	# 	instance.pessoa.save()
 
 class Banco(models.Model):
 	nome = models.CharField(max_length=100)
