@@ -40,8 +40,6 @@
 </head>
 
 <body>
-    <!-- ======= Header ======= -->
-    {% block header %}
     <header id="header" class="header fixed-top d-flex align-items-center">
 
         <div class="d-flex align-items-center justify-content-between">
@@ -51,6 +49,11 @@
             </a>
             <i class="bi bi-list toggle-sidebar-btn"></i>
         </div>
+
+        {% if not request.user.is_authenticated %}
+        <meta http-equiv="refresh" content="0; URL='{% url 'login' %}'" /> {% endif %}
+        <!-- ======= Header ======= -->
+        {% block header %}
         <!-- End Logo -->
 
         <!-- <div class="search-bar">
@@ -242,6 +245,43 @@
         <section class="section dashboard">
             <div class="row">
 
+                <div class="col-lg-4">
+                    {% csrf_token %} {% if valortotal is not null%}
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Total</h5>
+                            R$ {{ valortotal }}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- End Default Card -->
+                </div>
+                <div class="col-lg-4">
+                    {% csrf_token %} {% if saidas is not null%}
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Despesas</h5>
+                            R$ {{ saidas }}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- End Default Card -->
+                </div>
+
+                <div class="col-lg-4">
+                    {% csrf_token %} {% if entradas is not null%}
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Receitas</h5>
+                            R$ {{ entradas }}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- End Default Card -->
+                </div>
                 {% block main %} {% endblock %}
 
             </div>

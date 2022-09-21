@@ -1,6 +1,7 @@
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView 
+from django.db.models import Sum, Count
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from braces.views import GroupRequiredMixin
@@ -12,6 +13,13 @@ class Index(TemplateView):
 
 	def get_context_data(self, *args, **kwargs):
 		dados = super().get_context_data(*args, **kwargs)
+		valorTotal = ContaBancaria.objects.filter(usuario = self.request.user).values('valor_total').aggregate(Sum('valor_total'))
+		saidas = MovimentacaoSaida.objects.filter(conta_bancaria__usuario = self.request.user).values('valor').aggregate(Sum('valor'))
+		entradas = MovimentacaoEntrada.objects.filter(conta_bancaria__usuario = self.request.user).values('valor').aggregate(Sum('valor'))
+
+		dados['valortotal'] = valorTotal['valor_total__sum']
+		dados['saidas'] = saidas['valor__sum']
+		dados['entradas'] = entradas['valor__sum']
 
 		return dados
 
