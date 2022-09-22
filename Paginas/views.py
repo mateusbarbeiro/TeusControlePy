@@ -1,3 +1,4 @@
+from urllib import request
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView 
@@ -13,6 +14,9 @@ class Index(TemplateView):
 
 	def get_context_data(self, *args, **kwargs):
 		dados = super().get_context_data(*args, **kwargs)
+		if not self.request.user.is_authenticated: 
+			return dados
+
 		valorTotal = ContaBancaria.objects.filter(usuario = self.request.user).values('valor_total').aggregate(Sum('valor_total'))
 		saidas = MovimentacaoSaida.objects.filter(conta_bancaria__usuario = self.request.user).values('valor').aggregate(Sum('valor'))
 		entradas = MovimentacaoEntrada.objects.filter(conta_bancaria__usuario = self.request.user).values('valor').aggregate(Sum('valor'))
