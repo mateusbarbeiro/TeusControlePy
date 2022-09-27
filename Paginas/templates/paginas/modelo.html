@@ -30,6 +30,8 @@
 
     <!-- Template Main CSS File -->
     <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+    <!-- Datatable -->
+    <link href="{% static 'assets/css/datatables.min.css' %}" rel="stylesheetdatatable">
 
     <!-- =======================================================
   * Template Name: NiceAdmin - v2.2.2
@@ -324,8 +326,17 @@
 
 
     <!-- Template Main JS File -->
+    <script src="{% static 'assets/js/jquery-3.6.0.min.js' %}"></script>
     <script src="{% static 'assets/js/main.js' %}"></script>
+    <script src="{% static 'assets/js/datatables.min.js' %}"></script>
 
+    <script>
+        $(document).ready(function() {
+            $("table").DataTable();
+        });
+    </script>
+
+    {% block scripts %} {% endblock %}
 </body>
 
 </html>

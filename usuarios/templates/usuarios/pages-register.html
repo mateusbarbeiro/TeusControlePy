@@ -177,6 +177,28 @@
     <!-- Template Main JS File -->
     <script src="{% static 'assets/js/main.js' %}"></script>
 
+    <script src="{% static 'assets/js/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'assets/js/jquery.mask.min.js' %}">
+    </script>
+
+    <script>
+        // quando o documento html estiver carregado, é aplicado mascara nos campos
+        // necessário pos pode ser que demore para carregar importações/carregamentos de plugins
+        $(document).ready(function() {
+            var SPMaskBehavior = function(val) {
+                    return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+                },
+                spOptions = {
+                    onKeyPress: function(val, e, field, options) {
+                        field.mask(SPMaskBehavior.apply({}, arguments), options);
+                    }
+                };
+
+            $('#id_telefone').mask(SPMaskBehavior, spOptions);
+            $("#id_cpf").mask("000.000.000-00");
+        });
+    </script>
+
 </body>
 
 </html>

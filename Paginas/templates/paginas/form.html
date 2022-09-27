@@ -30,4 +30,16 @@
 
 </form>
 
+{% endblock %} {% block scripts %}
+<script src="{% static 'assets/js/jquery.mask.min.js' %}">
+</script>
+
+<script>
+    // quando o documento html estiver carregado, é aplicado mascara nos campos
+    // necessário pos pode ser que demore para carregar importações/carregamentos de plugins
+    $(document).ready(function() {
+        // (seletor) contem o titulo
+        // $("input[id=*data_]").mask("(00) 0000-0000");
+    });
+</script>
 {% endblock %}
