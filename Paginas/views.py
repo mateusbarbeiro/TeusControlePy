@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404
 
 from .models import Banco, Categoria, ContaBancaria, HistoricoExtrato, TipoConta, MovimentacaoEntrada, MovimentacaoSaida
 class Index(TemplateView): 
-	template_name = "paginas/modelo.html"
+	template_name = "paginas/index.html"
 
 	def get_context_data(self, *args, **kwargs):
 		dados = super().get_context_data(*args, **kwargs)

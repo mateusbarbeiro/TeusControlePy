@@ -1,4 +1,4 @@
-{% extends 'paginas/modelo.html' %} {% load static %} {% block pagetitle %}
+{% extends 'paginas/modelo.html' %} {% load static %} {% block pagetitle %} {% load meus_filtros %}
 <h1>Lista de bancos
     <a href="{% url 'cadastrar-banco' %}" class="btn btn-primary float-right ms-5">
 		Cadastrar Bancos
@@ -25,6 +25,8 @@
         {% for obj in object_list %}
         <tr>
             <td>{{ obj.nome }}</td>
+            <!-- <td>{% substituir obj.nome 'B' '' %}</td> -->
+            <!-- <td>{{ obj.nome|remover:'B' }}</td> -->
             <td>{{ obj.codigo }}</td>
             <td>
                 <a href="{% url 'editar-banco' obj.pk %}" class="btn btn-warning">Editar</a>
