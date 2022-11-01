@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 	'usuarios.apps.UsuariosConfig',
 
 	'crispy_forms',
+	'debug_toolbar',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -56,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'TeusControlePy.urls'
@@ -135,3 +137,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'login'
+
+# django debug toolbar
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    # ...
+]

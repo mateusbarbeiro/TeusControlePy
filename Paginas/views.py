@@ -359,7 +359,7 @@ class MovimentacaoEntradaList(LoginRequiredMixin, ListView):
 	def get_queryset(self):
 		
 		self.object_list = MovimentacaoEntrada.objects.filter(
-			conta_bancaria__usuario = self.request.user)
+			conta_bancaria__usuario = self.request.user).select_related('categoria', 'conta_bancaria', 'conta_bancaria__banco')
 		return self.object_list
 
 
@@ -370,7 +370,7 @@ class MovimentacaoSaidaList(LoginRequiredMixin, ListView):
 	def get_queryset(self):
 		
 		self.object_list = MovimentacaoSaida.objects.filter(
-			conta_bancaria__usuario = self.request.user)
+			conta_bancaria__usuario = self.request.user).select_related('categoria', 'conta_bancaria', 'conta_bancaria__banco')
 		return self.object_list
 
 
