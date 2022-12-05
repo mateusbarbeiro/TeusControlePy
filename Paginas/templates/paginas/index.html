@@ -1,4 +1,4 @@
-{% extends 'paginas/modelo.html' %} {% load static %} {% block main %}
+{% extends 'paginas/modelo.html' %} {% load static %} {% block main %} {% load meus_filtros %}
 
 
 <section class="section dashboard">
@@ -9,7 +9,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Total</h5>
-                    R$ {{ valortotal }}
+                    {% cifra_real valortotal %}
                 </div>
             </div>
             {% endif %}
@@ -21,7 +21,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Despesas</h5>
-                    R$ {{ saidas }}
+                    {% cifra_real saidas %}
                 </div>
             </div>
             {% endif %}
@@ -34,7 +34,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Receitas</h5>
-                    R$ {{ entradas }}
+                    {% cifra_real entradas %}
                 </div>
             </div>
             {% endif %}

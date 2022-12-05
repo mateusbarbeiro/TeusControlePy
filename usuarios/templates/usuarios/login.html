@@ -17,6 +17,7 @@
     <!-- Google Fonts -->
     <link href="https://fonts.gstatic.com" rel="preconnect">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
 
     <!-- Vendor CSS Files -->
     <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
@@ -84,8 +85,15 @@
 
                                         <div class="col-12">
                                             <label for="yourPassword" class="form-label">Senha</label>
-                                            <input type="password" name="password" class="form-control" id="yourPassword" required>
-                                            <div class="invalid-feedback">Entre com sua senha!</div>
+                                            <div class="input-group has-validation">
+                                                <input type="password" name="password" class="form-control" id="yourPassword" required>
+                                                <i class="input-group-text far fa-eye" id="togglePassword"></i>
+                                                <!-- <i class="far fa-eye" id="togglePassword"></i> -->
+                                                <!-- <span class="input-group-text" id="inputGroupPrepesnd"> -->
+                                                <!-- <i class="far fa-eye" id="togglePassword" style="margin-left: -30px; cursor: pointer;"></i> -->
+                                                <!-- </span> -->
+                                                <div class="invalid-feedback">Entre com sua senha!</div>
+                                            </div>
                                         </div>
 
                                         <!-- <div class="col-12">
@@ -146,6 +154,19 @@
 
     <!-- Template Main JS File -->
     <script src="{% static 'assets/js/main.js' %}"></script>
+
+    <script>
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#yourPassword');
+
+        togglePassword.addEventListener('click', function(e) {
+            // toggle the type attribute
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            // toggle the eye slash icon
+            this.classList.toggle('fa-eye-slash');
+        });
+    </script>
 
 </body>
 

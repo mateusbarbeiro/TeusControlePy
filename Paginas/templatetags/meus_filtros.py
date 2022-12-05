@@ -16,3 +16,8 @@ def esta_no_grupo(usuario, nome_grupo):
 @register.simple_tag(name='substituir')
 def substituir(texto, encontrar, sub):
 	return texto.replace(encontrar, sub)
+
+
+@register.simple_tag(name="cifra_real")
+def cifra_real(valor):
+	return 'R$ ' + str(valor)
